@@ -3,7 +3,7 @@
 ## Run locally
 ```bash
 go run ./cmd/api
-# GET http://localhost:3000/aggregate
+# GET http://localhost:3000/fetch
 
 
 ```
