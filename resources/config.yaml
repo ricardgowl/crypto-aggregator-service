@@ -1,0 +1,9 @@
+server:
+  port: 3000
+
+oauth:
+  id: "RULETHEMALL"
+  secret: "MY_SECRET_KEY"
+
+keys:
+  public: "PUBLIC_KEY"
