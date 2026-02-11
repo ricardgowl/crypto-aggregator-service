@@ -46,17 +46,11 @@ func main() {
 
 	httpClient := webclients.NewClient(3 * time.Second)
 
-	/*providers := []services.QuoteProvider{
-		repositories.NewBitsoCryptoProvider(httpClient),
-	}*/
-
 	clients := map[string]repositories.CryptoClient{
 		"bitso": repositories.NewBitsoCryptoProvider(httpClient),
 		"mock":  &adapters.MockClient{},
 	}
 	// AggregatorSVC
-
-	//aggSvc := services.NewAggSvc(layoutLoader, providers, 2*time.Second)
 
 	// Poller
 	poller := services.NewPoller(layoutStore, clients, vendorsMap, logger)
@@ -70,7 +64,7 @@ func main() {
 
 	httpAPI.NewHealthController(httpServer)
 
-	httpAPI.NewAggregatorController(httpServer, nil, poller)
+	httpAPI.NewPollerController(httpServer, poller)
 
 	//httpServer.Start()
 

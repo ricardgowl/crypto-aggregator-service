@@ -29,64 +29,6 @@ type tickerResp struct {
 	} `json:"payload"`
 }
 
-/* func (p *CryptoProvider) GetQuote(ctx context.Context, ticker models.Ticker) (services.Quote, error) {
-	// Bitso uses books like btc_mxn, eth_mxn, xrp_mxn
-	book := strings.ToLower(string(ticker)) + "_mxn"
-
-	u, err := url.Parse(p.BaseURL)
-	if err != nil {
-		return services.Quote{}, fmt.Errorf("parse base url: %w", err)
-	}
-	u.Path = "/api/v3/ticker"
-	q := u.Query()
-	q.Set("book", book)
-	u.RawQuery = q.Encode()
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), nil)
-	if err != nil {
-		return services.Quote{}, fmt.Errorf("new request: %w", err)
-	}
-
-	resp, err := p.Client.Do(req)
-	if err != nil {
-		return services.Quote{}, fmt.Errorf("do request: %w", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode/100 != 2 {
-		return services.Quote{}, fmt.Errorf("unexpected status: %s", resp.Status)
-	}
-
-	var body tickerResp
-	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
-		return services.Quote{}, fmt.Errorf("decode: %w", err)
-	}
-	if !body.Success {
-		return services.Quote{}, fmt.Errorf("bitso response success=false")
-	}
-
-	price, err := strconv.ParseFloat(body.Payload.Last, 64)
-	if err != nil {
-		return services.Quote{}, fmt.Errorf("parse last %q: %w", body.Payload.Last, err)
-	}
-
-	// created_at is ISO 8601; parse if possible
-	ts := time.Now().UTC()
-	if body.Payload.CreatedAt != "" {
-		if parsed, err := time.Parse(time.RFC3339, body.Payload.CreatedAt); err == nil {
-			ts = parsed.UTC()
-		}
-	}
-
-	return services.Quote{
-		Ticker: ticker,
-		Time:   ts,
-		Prices: map[string]float64{
-			"MXN": price,
-		},
-	}, nil
-} */
-
 func (c *CryptoProvider) GetPrice(ctx context.Context, symbol string) (*models.Money, error) {
 	// Bitso uses "btc_mxn" format
 	// Parallel fetch could be done here too, but keeping it simple for now
