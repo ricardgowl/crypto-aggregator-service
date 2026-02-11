@@ -1,5 +1,6 @@
 server:
   port: 3000
+  refresh_interval: 10
 
 oauth:
   id: "RULETHEMALL"

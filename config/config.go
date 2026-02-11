@@ -1,6 +1,7 @@
 package config
 
 import (
+	"crypto-aggregator-service/internal/models"
 	"strings"
 
 	"github.com/knadh/koanf"
@@ -13,17 +14,32 @@ import (
 // Configurations Application wide configurations
 type Configurations struct {
 	Server ServerConfigurations `koanf:"server"`
+	App    AppConfigurations    `koanf:"app"`
 	Keys   KeysConfigurations   `koanf:"keys"`
 }
 
 // ServerConfigurations Server configurations
 type ServerConfigurations struct {
-	Port int `koanf:"port"`
+	Port            int `koanf:"port"`
+	RefreshInterval int `koanf:"refresh_interval"`
+}
+
+// AppConfigurations App configurations
+type AppConfigurations struct {
+	Layout []ItemConfig `koanf:"layout"`
 }
 
 // KeysConfigurations asymmetric keys
 type KeysConfigurations struct {
 	Public string `koanf:"public"`
+}
+
+// ItemConfig represents a row in config.json.
+// It maps to the domain component but adds the necessary "Vendor" config.
+type ItemConfig struct {
+	ID        int    `json:"id"`
+	Component string `json:"component"`
+	Vendor    string `json:"vendor"` // Configuration only!
 }
 
 // LoadConfig Loads configurations depending upon the environment
@@ -51,4 +67,26 @@ func LoadConfig(logger *zap.SugaredLogger) *Configurations {
 	}
 
 	return &configuration
+}
+
+// Helper to convert Config -> Domain
+func (c *AppConfigurations) ToDomain() []models.Component {
+	list := make([]models.Component, len(c.Layout))
+	for i, item := range c.Layout {
+		list[i] = models.Component{
+			ID:        item.ID,
+			Component: models.ComponentType(item.Component),
+			Model:     nil, // Starts empty
+		}
+	}
+	return list
+}
+
+// Helper to extract Vendor Map (ID -> Vendor)
+func (c *AppConfigurations) GetVendorMap() map[int]string {
+	m := make(map[int]string)
+	for _, item := range c.Layout {
+		m[item.ID] = item.Vendor
+	}
+	return m
 }

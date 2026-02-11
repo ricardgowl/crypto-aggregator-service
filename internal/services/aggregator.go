@@ -19,7 +19,7 @@ type Aggregator struct {
 	names map[models.Ticker]string
 }
 
-func New(layoutLoader LayoutLoader, providers []QuoteProvider, perTickerTimeout time.Duration) *Aggregator {
+func NewAggSvc(layoutLoader LayoutLoader, providers []QuoteProvider, perTickerTimeout time.Duration) *Aggregator {
 	if perTickerTimeout <= 0 {
 		perTickerTimeout = 2 * time.Second
 	}
