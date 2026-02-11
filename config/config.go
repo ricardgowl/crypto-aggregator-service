@@ -69,8 +69,8 @@ func LoadConfig(logger *zap.SugaredLogger) *Configurations {
 	return &configuration
 }
 
-// Helper to convert Config -> Domain
-func (c *AppConfigurations) ToDomain() []models.Component {
+// ToModel Helper to convert Config -> Domain
+func (c *AppConfigurations) ToModel() []models.Component {
 	list := make([]models.Component, len(c.Layout))
 	for i, item := range c.Layout {
 		list[i] = models.Component{
@@ -82,7 +82,7 @@ func (c *AppConfigurations) ToDomain() []models.Component {
 	return list
 }
 
-// Helper to extract Vendor Map (ID -> Vendor)
+// GetVendorMap Helper to extract Vendor Map (ID -> Vendor)
 func (c *AppConfigurations) GetVendorMap() map[int]string {
 	m := make(map[int]string)
 	for _, item := range c.Layout {

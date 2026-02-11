@@ -2,6 +2,23 @@ server:
   port: 3000
   refresh_interval: 10
 
+app:
+  layout:
+    - id: 1
+      component: crypto_btc
+      vendor: bitso
+      model: { }
+
+    - id: 2
+      component: crypto_eth
+      vendor: bitso
+      model: { }
+
+    - id: 3
+      component: crypto_xrp
+      vendor: bitso
+      model: { }
+
 oauth:
   id: "RULETHEMALL"
   secret: "MY_SECRET_KEY"

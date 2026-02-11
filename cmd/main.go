@@ -38,9 +38,10 @@ func main() {
 
 	logger.Infof("Loaded layout: %v", layout)
 
-	cleanLayout := configs.App.ToDomain()
-	layoutStore := repositories.NewLayoutStore(cleanLayout)
+	//cleanLayout := configs.App.ToDomain()
+	layoutStore := repositories.NewLayoutStore(layout)
 	vendorsMap := configs.App.GetVendorMap()
+	logger.Infof("Loaded vendors: %v", vendorsMap)
 
 	// Providers
 
@@ -50,7 +51,6 @@ func main() {
 		"bitso": repositories.NewBitsoCryptoProvider(httpClient),
 		"mock":  &adapters.MockClient{},
 	}
-	// AggregatorSVC
 
 	// Poller
 	poller := services.NewPoller(layoutStore, clients, vendorsMap, logger)
