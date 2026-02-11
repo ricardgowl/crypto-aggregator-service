@@ -15,7 +15,7 @@ Microservicio en Go que agrega precios de criptomonedas desde múltiples proveed
 
 ## Arquitectura
 
-El servicio sigue una arquitectura hexagonal (ports & adapters) con separación clara entre capas:
+El servicio sigue una arquitectura con separación clara entre capas:
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -80,55 +80,9 @@ Bitso no ofrece pares USD para todas las criptomonedas. Cuando la consulta del b
 
 Todas las dependencias se inyectan vía constructores (`NewPoller`, `NewHTTPServer`, `NewLayoutStore`), facilitando el testing y evitando estado global.
 
-## Estructura del proyecto
-
-```
-crypto-aggregator-service/
-├── cmd/
-│   └── main.go                          # Punto de entrada
-├── config/
-│   ├── config.go                        # Carga de configuración (YAML + env vars)
-│   ├── layout_loader.go                 # Layout estático predefinido
-│   ├── config_test.go                   # Tests de configuración
-│   └── logger.go                        # Logger estructurado (Zap + ECS)
-├── internal/
-│   ├── adapters/
-│   │   ├── mock.go                      # Cliente mock con precios simulados
-│   │   ├── mock_test.go                 # Tests del mock client
-│   │   ├── httpapi/
-│   │   │   ├── router.go               # Chi router con middleware
-│   │   │   ├── router_test.go           # Tests del router
-│   │   │   ├── health_controller.go     # Endpoints /health/live, /health/ready, /metrics
-│   │   │   ├── health_controller_test.go
-│   │   │   ├── poller_controller.go     # Endpoint /fetch
-│   │   │   ├── poller_controller_test.go
-│   │   │   ├── server_response.go       # Helpers para respuestas JSON
-│   │   │   └── server_response_test.go
-│   │   └── webclients/
-│   │       ├── http_client.go           # Factory de http.Client con connection pooling
-│   │       └── http_client_test.go
-│   ├── models/
-│   │   ├── crypto.go                    # Model, Money, Ticker
-│   │   ├── crypto_test.go
-│   │   ├── errors.go                    # ProvidersError, ErrNoProviders
-│   │   ├── errors_test.go
-│   │   ├── layout.go                    # Component, Layout
-│   │   └── layout_test.go
-│   ├── repositories/
-│   │   ├── client.go                    # Interfaz CryptoClient
-│   │   ├── bitso.go                     # Implementación Bitso API
-│   │   ├── bitso_test.go               # Tests con httptest + redirectTransport
-│   │   ├── layout_store.go             # Store in-memory thread-safe
-│   │   └── layout_store_test.go        # Tests incluyendo concurrencia
-│   └── services/
-│       ├── poller.go                    # Servicio de polling concurrente
-│       └── poller_test.go              # Tests con stub clients
-├── resources/
-│   └── config.yaml                      # Configuración de la aplicación
-├── Dockerfile                           # Build multi-stage (Go builder + Alpine)
-├── go.mod
-└── go.sum
-```
+## Mejoras del proyecto
+Me hubiese gustado hacerlo mejor con integraciones reales de bitso o binance, etc.
+Me hubiese gustado agregarle una capa de redis para evitar el polling y el gasto de memoria.
 
 ## Requisitos
 
